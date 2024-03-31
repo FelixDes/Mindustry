@@ -531,6 +531,17 @@ public class ServerControl implements ApplicationListener{
             info(pause ? "Game paused." : "Game unpaused.");
         });
 
+        handler.register("ps", "Shortcut for pause toggling.", arg -> {
+            if(state.isMenu()){
+                err("Cannot pause without a game running.");
+                return;
+            }
+            boolean needPause = !state.isPaused();
+            autoPaused = false;
+            state.set(needPause ? State.paused : State.playing);
+            info(needPause ? "Game paused." : "Game unpaused.");
+        });
+
         handler.register("rules", "[remove/add] [name] [value...]", "List, remove or add global rules. These will apply regardless of map.", arg -> {
             String rules = Core.settings.getString("globalrules");
             JsonValue base = JsonIO.json.fromJson(null, rules);
